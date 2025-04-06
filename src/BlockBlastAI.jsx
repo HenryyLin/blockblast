@@ -376,6 +376,7 @@ export default function BlockBlastAI() {
   };
 
   const addActive = idx => setActive(a => (a.length < 3 ? [...a, pool[idx]] : a));
+  const removeActive = idx => setActive(a => a.filter((_, i) => i !== idx));
 
   const findLinesToClear = (b) => {
     const lines = [];
@@ -569,7 +570,15 @@ export default function BlockBlastAI() {
         <div>
           <strong>Active ({active.length}/3)</strong>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 6 }}>
-            {active.map((p, i) => <div key={'a' + i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Prev p={p} /><span>#{i + 1}</span></div>)}
+            {active.map((p, i) => <div key={'a' + i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Prev p={p} /><span>#{i + 1}</span>
+              <button
+                onClick={() => removeActive(i)}
+                disabled={isAnimating}          // optional: lock while animating
+                style={{ marginLeft: 6 }}
+              >
+                ✖
+              </button>
+            </div>)}
           </div>
         </div>
       </div>
