@@ -146,7 +146,7 @@ const rectangleBonus = b => {
 const scoreBoard = (b, lines) => {
   return lines * 50000             
        - 2 * centrePenalty(b)         
-       - holes(b) * 200           
+       - holes(b) * 250           
        + 0.7 * adjacencyScore(b)        
        - smoothness(b)            
        + 0.5 * rectangleBonus(b);       
