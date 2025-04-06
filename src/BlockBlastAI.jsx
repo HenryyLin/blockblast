@@ -22,7 +22,20 @@ const base = [
   [[1, 0, 0], [1, 0, 0], [1, 1, 1]],
   [[1, 1, 0], [0, 1, 1]],
 ];
-let PIECES = uniq(base.flatMap(b => [b, rot(b), rot(rot(b)), rot(rot(rot(b)))]));
+let PIECES = uniq(base.flatMap(b => [
+  b,
+  rot(b),
+  rot(rot(b)),
+  rot(rot(rot(b))),
+  reflectH(b),
+  reflectH(rot(b)),
+  reflectH(rot(rot(b))),
+  reflectH(rot(rot(rot(b)))),
+  reflectV(b),
+  reflectV(rot(b)),
+  reflectV(rot(rot(b))),
+  reflectV(rot(rot(rot(b))))
+]));
 
 const grid = (r, c, f = false) => Array.from({ length: r }, () => Array(c).fill(f));
 const clone = g => g.map(r => [...r]);
