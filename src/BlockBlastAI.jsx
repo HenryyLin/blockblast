@@ -8,6 +8,8 @@ const ROLLOUTS = 25;
 const ANIMATION_DELAY = 800; 
 
 const rot = m => m[0].map((_, c) => m.map(r => r[c]).reverse());
+const reflectH = m => m.map(row => [...row].reverse());
+const reflectV = m => [...m].reverse();
 const uniq = a => a.filter((p, i) => a.findIndex(q => JSON.stringify(q) === JSON.stringify(p)) === i);
 const base = [
   [[1, 1, 1, 1, 1]],
