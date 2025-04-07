@@ -577,7 +577,7 @@ const runSimulationStep = useCallback(async () => {
 
       if (!seq) {
         setMsg(`Sim Turn ${simulationStatusRef.current.turns + 1}: GAME OVER! No valid placement. Final Score: ${simulationStatusRef.current.lines} lines.`);
-        setActive([]);
+        //setActive([]);
         setIsSimulating(false);
         setIsAnimating(false);
         return;
