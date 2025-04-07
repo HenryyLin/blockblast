@@ -531,10 +531,10 @@ export default function BlockBlastAI() {
   };
 
 
-  const runSimulationStep = useCallback(async () => {
+const runSimulationStep = useCallback(async () => {
       if (!simulationStatusRef.current.isSimulating) {
-          // console.log("Simulation stopped check.");
           if (isSimulating) setIsSimulating(false);
+          if (isAnimating) setIsAnimating(false);
           if (active.length > 0) setActive([]);
           return;
       }
@@ -542,6 +542,7 @@ export default function BlockBlastAI() {
       if (PIECES.length < 3) {
           setMsg("Not enough unique pieces defined to draw 3 for simulation.");
           setIsSimulating(false);
+          setIsAnimating(false);
           return;
       }
        const drawnPieces = [];
@@ -553,6 +554,7 @@ export default function BlockBlastAI() {
        if (drawnPieces.length < 3) {
            setMsg("Could not draw 3 pieces. Stopping simulation.");
             setIsSimulating(false);
+            setIsAnimating(false);
             return;
        }
 
@@ -561,25 +563,23 @@ export default function BlockBlastAI() {
 
        const seq = await new Promise(resolve => {
            setTimeout(() => {
-              //  console.time(`bestTrio Sim Turn ${simulationStatusRef.current.turns + 1}`);
                const result = bestTrio(boardRef.current, drawnPieces);
-              //  console.timeEnd(`bestTrio Sim Turn ${simulationStatusRef.current.turns + 1}`);
                resolve(result);
            }, 10);
        });
 
-
       if (!simulationStatusRef.current.isSimulating) {
-          // console.log("Simulation stopped during thinking.");
            if (isSimulating) setIsSimulating(false);
+           if (isAnimating) setIsAnimating(false);
            if (active.length > 0) setActive([]);
           return;
       }
 
       if (!seq) {
-        setMsg(`Sim Turn ${simulationStatusRef.current.turns + 1}: GAME OVER! Final Score: ${simulationStatusRef.current.lines} lines.`);
+        setMsg(`Sim Turn ${simulationStatusRef.current.turns + 1}: GAME OVER! No valid placement. Final Score: ${simulationStatusRef.current.lines} lines.`);
         setActive([]);
         setIsSimulating(false);
+        setIsAnimating(false);
         return;
       }
 
@@ -587,12 +587,12 @@ export default function BlockBlastAI() {
       let linesThisTurn = 0;
 
       for (let i = 0; i < seq.length; i++) {
-          if (!simulationStatusRef.current.isSimulating) {
-              // console.log(`Simulation stopped before placing piece ${i+1}.`);
-              if (isSimulating) setIsSimulating(false);
-              if (active.length > 0) setActive([]);
-              return;
-          }
+           if (!simulationStatusRef.current.isSimulating) {
+               if (isSimulating) setIsSimulating(false);
+               if (isAnimating) setIsAnimating(false);
+               if (active.length > 0) setActive([]);
+               return;
+            }
 
           const move = seq[i];
           setMsg(`Sim Turn ${simulationStatusRef.current.turns + 1}: Placing piece ${i+1} of ${seq.length}...`);
@@ -602,6 +602,7 @@ export default function BlockBlastAI() {
           if (!result || !result.placed) {
               setMsg(`Sim Turn ${simulationStatusRef.current.turns + 1}: ERROR placing piece ${i+1}. Stopping simulation.`);
               setIsSimulating(false);
+              setIsAnimating(false);
               setActive([]);
               return;
           }
@@ -623,12 +624,12 @@ export default function BlockBlastAI() {
       if (simulationStatusRef.current.isSimulating) {
            setTimeout(runSimulationStep, 50);
       } else {
-          // console.log("Simulation stopped after last placement of turn.");
            if (isSimulating) setIsSimulating(false);
+           if (isAnimating) setIsAnimating(false);
            if (active.length > 0) setActive([]);
       }
 
-  }, [animatePlacement, isSimulating]);
+  }, [animatePlacement, isAnimating, isSimulating]);
 
   const handleSimulationToggle = () => {
       if (!isSimulating) {
